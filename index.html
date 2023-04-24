@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lector</title>
+
+    <!-- vue js cdn -->
+    <script src="https://unpkg.com/vue@3"></script>
+
+    <!-- css -->
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <div class="topnav" id="myTopnav">
+        <a href="#home" class="active">Home</a>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+        <div class="dropdown">
+            <button class="dropbtn">Dropdown
+            <i class="fa fa-caret-down"></i>
+          </button>
+            <div class="dropdown-content">
+                <a href="#">Link 1</a>
+                <a href="#">Link 2</a>
+                <a href="#">Link 3</a>
+            </div>
+        </div>
+        <a href="#about">About</a>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
+    </div>
+
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <div class="jumbotron" style="width:100%">
+                    <h1>Lector</h1>
+                    <div class="navbar">
+                        <a href="#home">Home</a>
+                        <a href="#news">News</a>
+                        <a href="#news">Categories</a>
+                        <div class="dropdown">
+                            <button class="dropbtn">Panier : {{nbCommande}}
+							     <i class="fa fa-shopping"></i>
+						    </button>
+                            <div class="dropdown-content">
+                                <a href="#">Link 1</a>
+                                <a href="#">Link 2</a>
+                                <p>Prix Total: <span style="font-weight:bold;">{{prixTotal}} FCFA</span></p>
+                                <p v-for="commande in commandes">
+                                    Vous avez commandé un {{commande.nom}} - prix : {{commande.prix}}
+                                </p>
+                                <a href="#">Link 3</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <produit @nouveauproduit="commander" v-for="prod in produits" v-bind:prix="prod.prix" v-bind:libelle="prod.nom" v-bind:image="prod.m_img"></produit>
+            </div>
+
+            <div class="row">
+
+                <ul v-if="commandes">
+                    <li v-for="commande in commandes">
+                        Vous avez commandé un {{commande.nom}} - prix : {{commande.prix}}
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- les vendors -->
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+
+    <script type="text/javascript">
+        const vm = Vue.createApp({
+            data() {
+                return {
+                    nbCommande: 0,
+                    prixTotal: 0,
+                    produits: [{
+                        nom: 'Attack on titan (Tome 10)',
+                        prix: 7500,
+                        m_img: 'attack on titan.jpg'
+                    }, {
+                        nom: 'Dragon ball super(Tome 16)',
+                        prix: 500,
+                        m_img: 'couverture-Tome-16-Dragon-Ball-Super.jpg'
+                    }, {
+                        nom: 'immortal hulk',
+                        prix: 1000,
+                        m_img: 'cover immortal hulk.jpg'
+                    }, {
+                        nom: 'shingeki no kiogin (Tome 34)',
+                        prix: 2000,
+                        m_img: 'snk tome33.jpeg'
+                    }, {
+                        nom: 'one piece (Tome 96)',
+                        prix: 2000,
+                        m_img: 'one piece.jpg'
+                    }, {
+                        nom: 'The flash vol.8 (The flash wars)',
+                        prix: 2000,
+                        m_img: 'the flash.jpg'
+                    }, {
+                        nom: 'Attaque des titans vf',
+                        prix: 2000,
+                        m_img: 'L-Attaque-des-Titans.jpg'
+                    }, {
+                        nom: 'jujustu kaisen (last edition)',
+                        prix: 2000,
+                        m_img: 'Jujutsu-Kaisen-1-ki-oon.jpg'
+                    }, {
+                        nom: 'My Hero Academia (Tome 30)',
+                        prix: 2000,
+                        m_img: 'My-Hero-Academia.jpg'
+                    }, {
+                        nom: 'The batman: the comics movie',
+                        prix: 2000,
+                        m_img: 'Comic-book-covers-in-the-style-of-The-Batman.jpg'
+                    }, {
+                        nom: 'World war hulk:world Breaker',
+                        prix: 2000,
+                        m_img: 'word breaker.jpg'
+                    }, {
+                        nom: 'My Hero Academian (Tome 25)',
+                        prix: 2000,
+                        m_img: 'mha.jpg'
+                    }, ],
+                    commandes: []
+                }
+            },
+
+            methods: {
+                commander: function(prod) { //produit
+                    this.nbCommande++;
+                    this.prixTotal += prod.prix;
+                    this.commandes.push(produit);
+                }
+            }
+        })
+
+        vm.component('produit', {
+            props: ['prix', 'libelle', 'image'],
+            methods: {
+                ajouterProduit: function(libelle, prix, image) {
+                    var m_prod = {
+                        libelle,
+                        prix,
+                        image
+                    };
+                    this.$emit('nouveauproduit', m_prod);
+                }
+            },
+            template: `
+				<div class="card col-md-3">
+					<div class="card-body">
+						<img :src="image" width="150" />
+						<h6>{{libelle}}</h6>
+						<p><strong>{{prix}} FCFA</strong></p>
+						<button @click="ajouterProduit(libelle, prix, image)" class="btn btn-primary">Commander</button>
+					</div>
+				</div>
+			`
+        })
+
+        vm.mount("#app");
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        .navbar {
+            overflow: hidden;
+            background-color: #333;
+        }
+        
+        .navbar a {
+            float: left;
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        
+        .dropdown {
+            float: left;
+            overflow: scroll;
+        }
+        
+        .dropdown .dropbtn {
+            font-size: 16px;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 14px 16px;
+            background-color: inherit;
+            font-family: inherit;
+            margin: 0;
+        }
+        
+        .navbar a:hover,
+        .dropdown:hover .dropbtn {
+            background-color: red;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        
+        .dropdown-content a {
+            float: none;
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        @media screen and (max-width: 600px) {
+            .topnav a:not(:first-child),
+            .dropdown .dropbtn {
+                display: none;
+            }
+            .topnav a.icon {
+                float: right;
+                display: block;
+            }
+        }
+        /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the icon. This class makes the topnav look good on small screens (display the links vertically instead of horizontally) */
+        
+        @media screen and (max-width: 600px) {
+            .topnav.responsive {
+                position: relative;
+            }
+            .topnav.responsive a.icon {
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+            .topnav.responsive a {
+                float: none;
+                display: block;
+                text-align: left;
+            }
+            .topnav.responsive .dropdown {
+                float: none;
+            }
+            .topnav.responsive .dropdown-content {
+                position: relative;
+            }
+            .topnav.responsive .dropdown .dropbtn {
+                display: block;
+                width: 100%;
+                text-align: left;
+            }
+        }
+    </style>
+</body>
+
+</html>
